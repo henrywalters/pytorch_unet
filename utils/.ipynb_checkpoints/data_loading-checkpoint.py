@@ -102,15 +102,11 @@ class BasicDataset(Dataset):
         mask = load_image(mask_file[0])
         img = load_image(img_file[0])
 
-        print(mask.mode, img.mode)
-
         assert img.size == mask.size, \
             f'Image and mask {name} should be the same size, but are {img.size} and {mask.size}'
 
         img = self.preprocess(self.mask_values, img, self.scale, is_mask=False)
         mask = self.preprocess(self.mask_values, mask, self.scale, is_mask=True)
-
-        print(mask.shape, img.shape)
 
         return {
             'image': torch.as_tensor(img.copy()).float().contiguous(),
