@@ -19,14 +19,12 @@ from unet import UNet
 from utils.data_loading import BasicDataset, CarvanaDataset
 from utils.dice_score import dice_loss
 
-dir_img = Path('./small_test_data/boxes/imgs/')
-dir_mask = Path('./small_test_data/boxes/masks/')
-dir_checkpoint = Path('./checkpoints/')
-
-
 def train_model(
         model,
         device,
+        dir_img,
+        dir_mask,
+        dir_checkpoint,
         epochs: int = 5,
         batch_size: int = 1,
         learning_rate: float = 1e-5,
@@ -181,6 +179,8 @@ def get_args():
     parser.add_argument('--bilinear', action='store_true', default=False, help='Use bilinear upsampling')
     parser.add_argument('--classes', '-c', type=int, default=2, help='Number of classes')
     parser.add_argument('--channels', type=int, default=3, help='Number of channels in the input images')
+    parser.add_argument('--input', type=str, default='./data', help='Where to look for imgs & masks folders')
+    parser.add_argument('--checkpoints', type=str, default='./checkpoints', help='Where to save checkpoints to')
 
     return parser.parse_args()
 
@@ -201,7 +201,10 @@ if __name__ == '__main__':
     logging.info(f'Network:\n'
                  f'\t{model.n_channels} input channels\n'
                  f'\t{model.n_classes} output channels (classes)\n'
-                 f'\t{"Bilinear" if model.bilinear else "Transposed conv"} upscaling')
+                 f'\t{"Bilinear" if model.bilinear else "Transposed conv"} upscaling'
+                 f'\t{args.input} input folder\n'
+                 f'\t{args.checkpoints} checkpoints folder'
+                 )
 
     if args.load:
         state_dict = torch.load(args.load, map_location=device)
@@ -213,6 +216,9 @@ if __name__ == '__main__':
     try:
         train_model(
             model=model,
+            dir_img=Path(f"{args.input}/imgs"),
+            dir_mask=Path(f"{args.input}/masks"),
+            dir_checkpoint=Path(f"{args.checkpoints}"),
             epochs=args.epochs,
             batch_size=args.batch_size,
             learning_rate=args.lr,
