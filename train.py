@@ -204,7 +204,7 @@ if __name__ == '__main__':
                  f'\t{"Bilinear" if model.bilinear else "Transposed conv"} upscaling'
                  f'\t{args.input} input folder\n'
                  f'\t{args.checkpoints} checkpoints folder'
-                 )
+                )
 
     if args.load:
         state_dict = torch.load(args.load, map_location=device)
