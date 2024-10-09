@@ -14,10 +14,10 @@ from torch.utils.data import DataLoader, random_split
 from tqdm import tqdm
 
 import wandb
-from evaluate import evaluate
-from unet import UNet
-from utils.data_loading import BasicDataset, CarvanaDataset
-from utils.dice_score import dice_loss
+from .evaluate import evaluate
+from .unet import UNet
+from .utils.data_loading import BasicDataset, CarvanaDataset
+from .utils.dice_score import dice_loss
 
 def train_model(
         model,
